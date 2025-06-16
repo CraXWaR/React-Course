@@ -27,12 +27,8 @@ export default function Meals() {
 
     if (isLoading) return <p>Loading meals...</p>;
     if (error) return <p>Error: {error}</p>;
-    console.log(meals)
-    return (
-        <ul id="meals">
-            {meals.map((meal) => (
-                <MealItem key={meal.id} meal={meal} />
-            ))}
-        </ul>
-    );
+
+    return (<ul id="meals">
+            {meals.map((meal) => (<MealItem key={meal.id} meal={meal}/>))}
+        </ul>);
 }

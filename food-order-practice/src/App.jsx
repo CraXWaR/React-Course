@@ -1,11 +1,12 @@
 import Header from "./components/Header.jsx";
 import Meals from "./components/Meals.jsx";
+import {CartProvider} from "./store/CartCondex.jsx";
 
 function App() {
-    return (<>
+    return (<CartProvider>
         <Header/>
         <Meals/>
-    </>);
+    </CartProvider>);
 }
 
 export default App;
