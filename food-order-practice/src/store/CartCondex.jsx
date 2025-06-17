@@ -18,8 +18,7 @@ function cartReducer(state, action) {
 
                 // Create a new updated version of the item
                 const updatedItem = {
-                    ...existingItem,
-                    quantity: existingItem.quantity + 1,
+                    ...existingItem, quantity: existingItem.quantity + 1,
                 };
 
                 // Copy the items array and replace the updated item
@@ -28,15 +27,13 @@ function cartReducer(state, action) {
 
                 // Return the new state with updated items
                 return {
-                    ...state,
-                    items: updatedItems,
+                    ...state, items: updatedItems,
                 };
             }
 
             // If it doesn't exist, add it with quantity = 1
             return {
-                ...state,
-                items: [...state.items, { ...action.item, quantity: 1 }],
+                ...state, items: [...state.items, {...action.item, quantity: 1}],
             };
 
         case "REMOVE_FROM_CART":
@@ -44,7 +41,6 @@ function cartReducer(state, action) {
             const itemIndex = state.items.findIndex(item => item.id === action.id);
 
             const existingItem = state.items[itemIndex];
-
             if (existingItem.quantity === 1) {
                 // If quantity is 1 → remove item from cart
                 const updatedItems = state.items.filter(item => item.id !== action.id);
@@ -81,7 +77,7 @@ export function CartProvider({children}) {
 
     function removeFromCart(itemId) {
         dispatchCart({
-            type: 'REMOVE_FROM_CART', itemId,
+            type: 'REMOVE_FROM_CART', id: itemId,
         });
     }
 
