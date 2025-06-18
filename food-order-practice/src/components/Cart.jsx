@@ -5,7 +5,6 @@ import Button from "./UI/Button.jsx";
 import {currencyFormatter} from "../util/price-formating.js";
 import UserContext from "../store/UserContext.jsx";
 import CartItem from "./CartItem.jsx";
-import userContext from "../store/UserContext.jsx";
 
 export default function Cart() {
     const cartContext = useContext(CartContext);

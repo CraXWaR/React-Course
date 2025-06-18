@@ -10,10 +10,7 @@ export default function Checkout() {
     const cartContext = useContext(CartContext);
     const userContext = useContext(UserContext);
 
-    const cartTotal = cartContext.items.reduce(
-        (totalPrice, item) => totalPrice + item.quantity * item.price,
-        0
-    );
+    const cartTotal = cartContext.items.reduce((totalPrice, item) => totalPrice + item.quantity * item.price, 0);
 
     function closeForm() {
         userContext.closeCheckout();
@@ -23,21 +20,31 @@ export default function Checkout() {
         e.preventDefault();
 
         const fd = new FormData(e.target);
-        const customerData = Object.fromEntries(fd.entries()); // { email: test@example.com }
+        const customerData = Object.fromEntries(fd.entries());
+
+        fetch('http://localhost:3000/orders', {
+            method: 'POST', headers: {
+                'Content-Type': 'application/json', // Tells backend we're sending JSON
+            }, body: JSON.stringify({
+                order: {
+                    items: cartContext.items,
+                    customer: customerData,
+                }
+            }),
+        })
     }
 
-    return(
-        <Modal open={userContext.progress === 'checkout'} onClose={closeForm}>
+    return (<Modal open={userContext.progress === 'checkout'} onClose={closeForm}>
             <form onSubmit={submitForm}>
                 <h2>Checkout</h2>
                 <p>Total Amount: {currencyFormatter.format(cartTotal)}</p>
 
-                <Input label="Full Name" type="text" id="full-name" />
-                <Input label="E-Mail Address" type="email" id="email" />
-                <Input label="Street" type="text" id="street" />
+                <Input label="Full Name" type="text" id="name"/>
+                <Input label="E-Mail Address" type="email" id="email"/>
+                <Input label="Street" type="text" id="street"/>
                 <div className="control-row">
-                    <Input label="Postal Code" type="text" id="postal-code" />
-                    <Input label="City" type="text" id="city" />
+                    <Input label="Postal Code" type="text" id="postal-code"/>
+                    <Input label="City" type="text" id="city"/>
                 </div>
 
                 <p className="modal-actions">
@@ -47,6 +54,5 @@ export default function Checkout() {
                     <Button>Submit Order</Button>
                 </p>
             </form>
-        </Modal>
-    );
+        </Modal>);
 }
