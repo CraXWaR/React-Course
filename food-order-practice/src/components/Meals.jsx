@@ -13,7 +13,7 @@ export default function Meals() {
     const {data: meals, loading, error} = useHttp('http://localhost:3000/meals', requestConfig, []);
 
     if (loading) return <p className='center'>Loading...</p>;
-    if (error) return <Error title='Failed to get meals' message={error} />;
+    if (error) return <Error title='Failed to get meals' message={error}/>;
 
     // useEffect(() => {
     //     async function fetchMeals() {
