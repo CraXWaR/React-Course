@@ -15,12 +15,6 @@ function MainNavigation() {
                 <li>
                     <NavLink to="/events/new">Create Event</NavLink>
                 </li>
-                <li>
-                    <NavLink to="/events/1/edit">Edit Event</NavLink>
-                </li>
-                <li>
-                    <NavLink to="/events/1">Event Details</NavLink>
-                </li>
             </ul>
         </nav>
     </header>);

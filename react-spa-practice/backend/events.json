@@ -1,11 +1,1 @@
-{
-  "events": [
-    {
-      "id": "e1",
-      "title": "A dummy event",
-      "date": "2023-02-22",
-      "image": "https://blog.hubspot.de/hubfs/Germany/Blog_images/Optimize_Marketing%20Events%20DACH%202021.jpg",
-      "description": "Join this amazing event and connect with fellow developers."
-    }
-  ]
-}
+{"events":[{"title":"Vlado10","image":"https://bnetcmsus-a.akamaihd.net/cms/blog_header/h9/H9LLMU20DQFJ1725400142786.png","date":"2025-07-04","description":"Join Executive Producer & Vice President Holly Longdale, Senior Game Designer Bret Cocking, Associate Game Designer Leah Hwang, and host Community Manager Bethany Stout as they reveal a myriad of games and activities players can look forward to in the WoW 20th Anniversary Celebration in-game event—including some unique rewards, plus a look ahead at incoming Shaman Ascendance forms, the new Blackrock Depths Raid, new Timewalking dungeons, and more!\n","id":"36716924-bf51-4e68-8f1f-eab181a5fbef"},{"title":"Outlander2","image":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzcD2J1tZBBR52ZvgPhsMmAPolKcVOd7YQew&s","date":"2025-07-01","description":"testtesttesttest","id":"846fb77a-b2b4-4f20-bfc9-155a28138c4d"},{"title":"Outlander","image":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzcD2J1tZBBR52ZvgPhsMmAPolKcVOd7YQew&s","date":"2025-07-01","description":"test","id":"b526e735-bc66-4b86-9a73-44cd3f922917"},{"title":"Outlander","image":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzcD2J1tZBBR52ZvgPhsMmAPolKcVOd7YQew&s","date":"2025-07-01","description":"OutlanderOutlanderOutlander","id":"64a65e2a-7396-44ef-ba81-c35969ee4239"}]}
