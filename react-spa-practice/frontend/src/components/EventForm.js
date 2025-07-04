@@ -20,9 +20,13 @@ function EventForm({method, event}) {
             description: formData.get('description'),
         };
 
+        const url = event?.id ? `http://localhost:8080/events/${event.id}` : 'http://localhost:8080/events';
+
+        const httpMethod = method || (event?.id ? 'PATCH' : 'POST');
+
         try {
-            const res = await fetch('http://localhost:8080/events', {
-                method: 'POST', headers: {
+            const res = await fetch(url, {
+                method: httpMethod, headers: {
                     'Content-Type': 'application/json',
                 }, body: JSON.stringify(eventData),
             });
@@ -52,22 +56,22 @@ function EventForm({method, event}) {
     return (<form className={classes.form} onSubmit={handleSubmit}>
         <p>
             <label htmlFor="title">Title</label>
-            <input id="title" type="text" name="title" required/>
+            <input id="title" type="text" name="title" required defaultValue={event?.title || ''}/>
             {errors.title && <span className={classes.error}>{errors.title}</span>}
         </p>
         <p>
             <label htmlFor="image">Image</label>
-            <input id="image" type="url" name="image" required/>
+            <input id="image" type="url" name="image" required defaultValue={event?.image || ''}/>
             {errors.image && <span className={classes.error}>{errors.image}</span>}
         </p>
         <p>
             <label htmlFor="date">Date</label>
-            <input id="date" type="date" name="date" required/>
+            <input id="date" type="date" name="date" required defaultValue={event?.date || ''}/>
             {errors.date && <span className={classes.error}>{errors.date}</span>}
         </p>
         <p>
             <label htmlFor="description">Description</label>
-            <textarea id="description" name="description" rows="5" required/>
+            <textarea id="description" name="description" rows="5" required defaultValue={event?.description || ''}/>
             {errors.description && <span className={classes.error}>{errors.description}</span>}
         </p>
 
