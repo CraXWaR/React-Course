@@ -1,12 +1,17 @@
-import {useNavigate} from 'react-router-dom';
+import {data, useNavigate} from 'react-router-dom';
 
 import classes from './EventForm.module.css';
 import {useState} from "react";
+import {useDispatch} from "react-redux";
+
+import {editEvent, addEvent} from '../store/features/events/eventsSlice';
 
 function EventForm({method, event}) {
     const navigate = useNavigate();
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const dispatch = useDispatch();
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -39,6 +44,12 @@ function EventForm({method, event}) {
                     throw new Error('Something went wrong!');
                 }
             } else {
+                if (httpMethod === 'PATCH') {
+                    dispatch(editEvent(data));
+                } else {
+                    dispatch(addEvent(data));
+                }
+
                 navigate('/events');
             }
         } catch (error) {

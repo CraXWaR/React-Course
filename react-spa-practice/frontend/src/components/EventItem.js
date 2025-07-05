@@ -1,8 +1,34 @@
 import classes from './EventItem.module.css';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {deleteEvent} from "../store/features/events/eventsSlice";
 
 function EventItem({event}) {
-    function startDeleteHandler() {
+    const navigate = useNavigate();
+
+    const dispatch = useDispatch();
+
+    async function startDeleteHandler() {
+        const confirm = window.confirm("Are you sure you want to delete this event?");
+
+        if (!confirm) {
+            return;
+        }
+
+        try {
+            const res = await fetch(`http://localhost:8080/events/${event.id}`, {
+                method: "DELETE",
+            });
+
+            if (!res.ok) {
+                throw new Error("Could not delete event");
+            }
+
+            dispatch(deleteEvent(event.id));
+            navigate('/events');
+        } catch (error) {
+            alert('Delete failed: ' + error.message);
+        }
     }
 
     return (<article className={classes.event}>
