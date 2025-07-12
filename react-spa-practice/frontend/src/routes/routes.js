@@ -7,6 +7,8 @@ import EventDetailsPage from "../pages/EventDetailsPage";
 import EventsPage from "../pages/EventsPage";
 import NewEventPage from "../pages/NewEventPage";
 import EditEventPage from "../pages/EditEventPage";
+import EventLayout from "../pages/EventLayout";
+import NewsletterPage, {action as newsletterAction} from "../pages/NewsletterPage";
 
 export const router = createBrowserRouter([
     {
@@ -14,10 +16,16 @@ export const router = createBrowserRouter([
         element: <RootLayout/>,
         children: [
             {index: true, element: <HomePage/>},
-            {path: 'events', element: <EventsPage/>},
-            {path: 'events/new', element: <NewEventPage/>},
-            {path: 'events/:eventId', element: <EventDetailsPage/>},
-            {path: 'events/:eventId/edit', element: <EditEventPage/>},
+            {
+                path: 'events', element: <EventLayout/>,
+                children: [
+                    {index: true, element: <EventsPage/>},
+                    {path: 'new', element: <NewEventPage/>},
+                    {path: ':eventId', element: <EventDetailsPage/>},
+                    {path: ':eventId/edit', element: <EditEventPage/>},
+                ]
+            },
+            {path: 'newsletter', element: <NewsletterPage/>, action: newsletterAction,}
         ],
     }
 ])

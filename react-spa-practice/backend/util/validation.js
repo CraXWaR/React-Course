@@ -1,5 +1,5 @@
 function isValidText(value) {
-  return value && value.trim().length > 0;
+  return value && value.trim().length > 3;
 }
 
 function isValidDate(value) {

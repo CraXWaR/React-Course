@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 
 import {setEvents} from '../../src/store/features/events/eventsSlice'
+import PageContent from "../components/PageContent";
 
 function EventsPage() {
     const [isLoading, setIsLoading] = useState(true);
@@ -30,9 +31,9 @@ function EventsPage() {
         fetchEvents();
     }, [dispatch]);
 
-    if (isLoading) return <p>Loading events...</p>;
-    if (loadError) return <p>Error: {loadError}</p>;
-    if (events.length === 0) return <p>No events found.</p>;
+    if (isLoading) return <PageContent title={'Loading events...'}/>;
+    if (loadError) return <PageContent title={loadError}/>;
+    if (events.length === 0) return <PageContent title={'No events found.'}/>;
 
     return (<EventsList events={events}/>);
 }

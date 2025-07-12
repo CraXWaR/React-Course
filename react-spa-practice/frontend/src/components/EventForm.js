@@ -1,4 +1,4 @@
-import {data, useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 import classes from './EventForm.module.css';
 import {useState} from "react";
@@ -36,9 +36,10 @@ function EventForm({method, event}) {
                 }, body: JSON.stringify(eventData),
             });
 
+            const data = await res.json();
+
             if (!res.ok) {
-                if (res.status === 402) {
-                    const data = await res.json();
+                if (data.errors) {
                     setErrors(data.errors || {});
                 } else {
                     throw new Error('Something went wrong!');
@@ -67,22 +68,22 @@ function EventForm({method, event}) {
     return (<form className={classes.form} onSubmit={handleSubmit}>
         <p>
             <label htmlFor="title">Title</label>
-            <input id="title" type="text" name="title" required defaultValue={event?.title || ''}/>
+            <input id="title" type="text" name="title" defaultValue={event?.title || ''}/>
             {errors.title && <span className={classes.error}>{errors.title}</span>}
         </p>
         <p>
             <label htmlFor="image">Image</label>
-            <input id="image" type="url" name="image" required defaultValue={event?.image || ''}/>
+            <input id="image" type="url" name="image" defaultValue={event?.image || ''}/>
             {errors.image && <span className={classes.error}>{errors.image}</span>}
         </p>
         <p>
             <label htmlFor="date">Date</label>
-            <input id="date" type="date" name="date" required defaultValue={event?.date || ''}/>
+            <input id="date" type="date" name="date" defaultValue={event?.date || ''}/>
             {errors.date && <span className={classes.error}>{errors.date}</span>}
         </p>
         <p>
             <label htmlFor="description">Description</label>
-            <textarea id="description" name="description" rows="5" required defaultValue={event?.description || ''}/>
+            <textarea id="description" name="description" rows="5" defaultValue={event?.description || ''}/>
             {errors.description && <span className={classes.error}>{errors.description}</span>}
         </p>
 
