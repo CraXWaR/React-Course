@@ -1,13 +1,38 @@
-"use client";
-import { useParams } from 'next/navigation';
+import classes from "./page.module.css";
+import {getMealBySlug} from "@/lib/meals";
+import Image from "next/image";
 
-export default function MealDetailPage() {
-    // const { mealId } = useParams();
+export default async function MealDetailPage({params}) {
+    const meal = await getMealBySlug(params.slug);
 
-    return (
-        <div>
-            <h1>Meal Details</h1>
-            <p>Showing details for meal: <strong>mealId</strong></p>
-        </div>
-    );
+    meal.instructions = meal.instructions.replace(/\n/g, "\n");
+
+    return (<>
+            <header className={classes.header}>
+                <div className={classes.image}>
+                    <Image
+                        src={meal.image}
+                        alt={meal.title}
+                        fill
+                        className={classes.mealImage}
+                    />
+                </div>
+                <div className={classes.headerText}>
+                    <h1>{meal.title}</h1>
+                    <p className={classes.creator}>
+                        by <a href={`mailto:${meal.creator_email}`}>{meal.creator}</a>
+                    </p>
+                    <p className={classes.summary}>{meal.summary}</p>
+                </div>
+            </header>
+            <main>
+                <p
+                    className={classes.instructions}
+                    dangerouslySetInnerHTML={{
+                        __html: meal.instructions,
+                    }}
+                />
+            </main>
+        </>);
+
 }
