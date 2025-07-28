@@ -2,6 +2,8 @@ import {cache} from 'react'
 import {getConnection} from './db'
 import {notFound} from "next/navigation";
 
+import slugify from 'slugify'
+
 function wait(ms) {
     return new Promise((r) => setTimeout(r, ms))
 };
@@ -29,4 +31,29 @@ export async function getMealBySlug(slug) {
     }
 
     return rows[0];
+}
+
+export async function createMeal({title, summary, instructions, image, creator, creator_email}) {
+    try {
+        if (!title || !summary || !instructions || !image || !creator) {
+            throw new Error('Missing required fields.')
+        }
+
+        const conn = await getConnection()
+        const slug = slugify(title, {lower: true})
+
+        const query = `
+            INSERT INTO meals (title, summary, instructions, slug, image, creator, creator_email)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        `
+        const values = [title, summary, instructions, slug, image, creator, creator_email]
+
+        const [result] = await conn.execute(query, values)
+        await conn.end()
+
+        return {success: true, id: result.insertId, slug}
+    } catch (error) {
+        console.error('Create Meal Error:', error)
+        throw new Error('Could not create meal.')
+    }
 }
