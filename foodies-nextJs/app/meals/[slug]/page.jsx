@@ -1,6 +1,19 @@
 import classes from "./page.module.css";
 import {getMealBySlug} from "@/lib/meals";
 import Image from "next/image";
+import {notFound} from "next/navigation";
+
+export async function generateMetadata({params}) {
+    const meal = await getMealBySlug(params.slug);
+    console.log(meal.description);
+    if (!meal) {
+        notFound();
+    }
+
+    return {
+        title: meal.title, description: meal.summary,
+    }
+}
 
 export default async function MealDetailPage({params}) {
     const meal = await getMealBySlug(params.slug);
@@ -8,31 +21,31 @@ export default async function MealDetailPage({params}) {
     meal.instructions = meal.instructions.replace(/\n/g, "\n");
 
     return (<>
-            <header className={classes.header}>
-                <div className={classes.image}>
-                    <Image
-                        src={meal.image}
-                        alt={meal.title}
-                        fill
-                        className={classes.mealImage}
-                    />
-                </div>
-                <div className={classes.headerText}>
-                    <h1>{meal.title}</h1>
-                    <p className={classes.creator}>
-                        by <a href={`mailto:${meal.creator_email}`}>{meal.creator}</a>
-                    </p>
-                    <p className={classes.summary}>{meal.summary}</p>
-                </div>
-            </header>
-            <main>
-                <p
-                    className={classes.instructions}
-                    dangerouslySetInnerHTML={{
-                        __html: meal.instructions,
-                    }}
+        <header className={classes.header}>
+            <div className={classes.image}>
+                <Image
+                    src={meal.image}
+                    alt={meal.title}
+                    fill
+                    className={classes.mealImage}
                 />
-            </main>
-        </>);
+            </div>
+            <div className={classes.headerText}>
+                <h1>{meal.title}</h1>
+                <p className={classes.creator}>
+                    by <a href={`mailto:${meal.creator_email}`}>{meal.creator}</a>
+                </p>
+                <p className={classes.summary}>{meal.summary}</p>
+            </div>
+        </header>
+        <main>
+            <p
+                className={classes.instructions}
+                dangerouslySetInnerHTML={{
+                    __html: meal.instructions,
+                }}
+            />
+        </main>
+    </>);
 
 }

@@ -14,7 +14,7 @@ export function Header() {
     return (<>
             <MainHeaderBackground/>
             <header className={classes.header}>
-                <Link href="/foodies-nextJs/public" className={classes.logo}>
+                <Link href="/" className={classes.logo}>
                     <Image src={logoImg} alt="logo" priority/>
                     NextLevel Food
                 </Link>
