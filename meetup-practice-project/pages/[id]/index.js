@@ -20,7 +20,7 @@ export default function DetailsPage(props) {
 }
 
 export async function getStaticPaths() {
-    const client = await MongoClient.connect('mongodb+srv://CraXWaR:Q3o1pAalHjfHvkRN@nextjscluster.2kgssdr.mongodb.net/?retryWrites=true&w=majority&appName=NextJSCluster');
+    const client = await MongoClient.connect(process.env.MONGODB_URL);
     const db = client.db();
 
     const collection = await db.collection('meetups');
@@ -40,7 +40,7 @@ export async function getStaticPaths() {
 export async function getStaticProps(context) {
     const meetupId = context.params.id;
 
-    const client = await MongoClient.connect('mongodb+srv://CraXWaR:Q3o1pAalHjfHvkRN@nextjscluster.2kgssdr.mongodb.net/?retryWrites=true&w=majority&appName=NextJSCluster');
+    const client = await MongoClient.connect(process.env.MONGODB_URL);
     const db = client.db();
 
     const collection = await db.collection('meetups');
