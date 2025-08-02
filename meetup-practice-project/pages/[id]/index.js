@@ -1,39 +1,59 @@
+import {MongoClient, ObjectId} from "mongodb";
+
 import MeetupDetails from '../../components/meetups/MeetupDetail';
-import {DUMMY_MEETUPS} from "../index";
+import Head from "next/head";
 
 export default function DetailsPage(props) {
-    return (
+    return (<>
+        <Head>
+            <title>{props.title} | Meetup Details</title>
+            <meta name="description" content={props.description}/>
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        </Head>
         <MeetupDetails
             image={props.image}
             title={props.title}
             address={props.address}
-            details={props.details}
+            description={props.description}
         />
-    );
+    </>);
 }
 
 export async function getStaticPaths() {
-    const paths = DUMMY_MEETUPS.map((meetup) => ({
-        params: { id: meetup.id },
+    const client = await MongoClient.connect('mongodb+srv://CraXWaR:Q3o1pAalHjfHvkRN@nextjscluster.2kgssdr.mongodb.net/?retryWrites=true&w=majority&appName=NextJSCluster');
+    const db = client.db();
+
+    const collection = await db.collection('meetups');
+    const meetups = await collection.find({}, {_id: 1}).toArray();
+
+    client.close();
+
+    const paths = meetups.map((meetup) => ({
+        params: {id: meetup._id.toString()},
     }));
 
     return {
-        fallback: false,
-        paths,
+        fallback: 'blocking', paths,
     };
 }
 
 export async function getStaticProps(context) {
     const meetupId = context.params.id;
 
-    const selectedMeetup = DUMMY_MEETUPS.find((meetup) => meetup.id === meetupId);
+    const client = await MongoClient.connect('mongodb+srv://CraXWaR:Q3o1pAalHjfHvkRN@nextjscluster.2kgssdr.mongodb.net/?retryWrites=true&w=majority&appName=NextJSCluster');
+    const db = client.db();
+
+    const collection = await db.collection('meetups');
+    const meetup = await collection.findOne({_id: new ObjectId(meetupId)});
+    client.close();
 
     return {
         props: {
-            image: selectedMeetup.image,
-            title: selectedMeetup.title,
-            address: selectedMeetup.address,
-            details: selectedMeetup.details,
-        },
+            id: meetup._id.toString(),
+            title: meetup.title,
+            description: meetup.description,
+            image: meetup.image,
+            address: meetup.address,
+        }
     };
 }

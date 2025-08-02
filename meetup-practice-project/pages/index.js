@@ -1,41 +1,37 @@
-import MeetupList from "../components/meetups/MeetupList";
+import {MongoClient} from "mongodb";
 
-export const DUMMY_MEETUPS = [{
-    id: 'm1',
-    title: 'React Developers Meetup',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg',
-    address: 'Tech Hub, Sofia, Bulgaria',
-    details: 'Join React developers for a full-day workshop and networking event.'
-}, {
-    id: 'm2',
-    title: 'Frontend Masters Gathering',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg',
-    address: 'Innovation Center, Plovdiv, Bulgaria',
-    details: 'Join React developers for a full-day workshop and networking event.'
-}, {
-    id: 'm3',
-    title: 'JavaScript Enthusiasts Night',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png',
-    address: 'Code Café, Varna, Bulgaria',
-    details: 'Join React developers for a full-day workshop and networking event.'
-}, {
-    id: 'm4',
-    title: 'Next.js Power Session',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/8/8e/Nextjs-logo.svg',
-    address: 'Startup Lab, Burgas, Bulgaria',
-    details: 'Join React developers for a full-day workshop and networking event.'
-},];
+import MeetupList from "../components/meetups/MeetupList";
+import Head from "next/head";
 
 export default function HomePage(props) {
-    return (<MeetupList meetups={props.meetups}/>);
+    return (<>
+        <Head>
+            <title>Meetup App</title>
+            <meta name="description" content="A simple app to browse and join learning meetups."/>
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        </Head>
+        <MeetupList meetups={props.meetups}/>
+    </>);
 }
 
 export async function getStaticProps() {
-    //simulate fetch data from API
+    const client = await MongoClient.connect('mongodb+srv://CraXWaR:Q3o1pAalHjfHvkRN@nextjscluster.2kgssdr.mongodb.net/?retryWrites=true&w=majority&appName=NextJSCluster');
+    const db = client.db();
+
+    const collection = await db.collection('meetups');
+    const meetups = await collection.find().toArray();
+
+    client.close();
+
     return {
         props: {
-            meetups: DUMMY_MEETUPS
-        },
-        revalidate: 10
+            meetups: meetups.map(meetup => ({
+                title: meetup.title,
+                description: meetup.description,
+                image: meetup.image,
+                address: meetup.address,
+                id: meetup._id.toString(),
+            })),
+        }, revalidate: 10
     }
 }
