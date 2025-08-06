@@ -1,5 +1,5 @@
 import {useContext, useRef, useState} from 'react';
-import {motion} from 'framer-motion';
+import {motion, useAnimate, stagger} from 'framer-motion';
 
 import {ChallengesContext} from '../store/challenges-context.jsx';
 import Modal from './Modal.jsx';
@@ -13,12 +13,15 @@ export default function NewChallenge({onDone}) {
     const [selectedImage, setSelectedImage] = useState(null);
     const {addChallenge} = useContext(ChallengesContext);
 
+    const [scope, animate] = useAnimate();
+
     function handleSelectImage(image) {
         setSelectedImage(image);
     }
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
+
         const challenge = {
             title: title.current.value,
             description: description.current.value,
@@ -27,6 +30,11 @@ export default function NewChallenge({onDone}) {
         };
 
         if (!challenge.title.trim() || !challenge.description.trim() || !challenge.deadline.trim() || !challenge.image) {
+            await animate(
+                'input, textarea, #new-challenge-images li',
+                { x: [-10, 0, 10, 0] },
+                { type: 'tween', ease: 'easeInOut', duration: 0.3, delay: stagger(0.05) }
+            );
             return;
         }
 
@@ -35,46 +43,48 @@ export default function NewChallenge({onDone}) {
     }
 
     return (<Modal title="New Challenge" onClose={onDone}>
-        <form id="new-challenge" onSubmit={handleSubmit}>
-            <p>
-                <label htmlFor="title">Title</label>
-                <input ref={title} type="text" name="title" id="title"/>
-            </p>
+            <form ref={scope} id="new-challenge" onSubmit={handleSubmit}>
+                <p>
+                    <label htmlFor="title">Title</label>
+                    <input ref={title} type="text" name="title" id="title"/>
+                </p>
 
-            <p>
-                <label htmlFor="description">Description</label>
-                <textarea ref={description} name="description" id="description"/>
-            </p>
+                <p>
+                    <label htmlFor="description">Description</label>
+                    <textarea ref={description} name="description" id="description"/>
+                </p>
 
-            <p>
-                <label htmlFor="deadline">Deadline</label>
-                <input ref={deadline} type="date" name="deadline" id="deadline"/>
-            </p>
+                <p>
+                    <label htmlFor="deadline">Deadline</label>
+                    <input ref={deadline} type="date" name="deadline" id="deadline"/>
+                </p>
 
-            <motion.ul
-                id="new-challenge-images"
-                variants={{
-                    visible: {transition: {staggerChildren: 0.05}}
-                }}>
-                {images.map((image) => (<motion.li
+                <motion.ul
+                    id="new-challenge-images"
                     variants={{
-                        hidden: {opacity: 0, scale: 0.5}, visible: {opacity: 1, scale: 1}
+                        visible: {transition: {staggerChildren: 0.05}}
                     }}
-                    exit='visible'
-                    transition={{type: 'spring'}}
-                    key={image.alt}
-                    onClick={() => handleSelectImage(image)}
-                    className={selectedImage === image ? 'selected' : undefined}>
-                    <img {...image} />
-                </motion.li>))}
-            </motion.ul>
+                >
+                    {images.map((image) => (<motion.li
+                            variants={{
+                                hidden: {opacity: 0, scale: 0.5}, visible: {opacity: 1, scale: 1}
+                            }}
+                            exit={{opacity: 0, scale: 1}}
+                            transition={{type: 'spring'}}
+                            key={image.alt}
+                            onClick={() => handleSelectImage(image)}
+                            className={selectedImage === image ? 'selected' : undefined}
+                        >
+                            <img {...image} />
+                        </motion.li>))}
+                </motion.ul>
 
-            <p className="new-challenge-actions">
-                <button type="button" onClick={onDone}>
-                    Cancel
-                </button>
-                <button>Add Challenge</button>
-            </p>
-        </form>
-    </Modal>);
+                <p className="new-challenge-actions">
+                    <button type="button" onClick={onDone}>
+                        Cancel
+                    </button>
+                    <button>Add Challenge</button>
+                </p>
+            </form>
+        </Modal>);
 }
