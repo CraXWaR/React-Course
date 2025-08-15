@@ -1,31 +1,58 @@
 import Post from "./Post.jsx";
 
 import classes from './PostList.module.css';
-import NewPost from "./NewPost.jsx";
-import {useState} from "react";
-import Modal from "./Modal.jsx";
 
-export default function PostList({isPosting, onStopPosting}) {
-    const [enteredText, setEnteredText] = useState('');
-    const [enteredAuthor, setEnteredAuthor] = useState('');
+import {useEffect, useState} from "react";
 
-    function handleTextChange(e) {
-        setEnteredText(e.target.value);
-    }
+export default function PostList() {
+    const [posts, setPosts] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
-    function handleAuthorChange(e) {
-        setEnteredAuthor(e.target.value);
+    useEffect(() => {
+        async function fetchPosts() {
+            setIsLoading(true);
+            await fetch('http://localhost:8080/posts').then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    setPosts(data.posts);
+                })
+            setIsLoading(false);
+        }
+
+        fetchPosts();
+    }, []);
+
+    function handleAddPost(post) {
+        fetch('http://localhost:8080/posts', {
+            method: 'POST', body: JSON.stringify(post), headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(response => response.json())
+            .then(data => {
+                console.log(data);
+            })
+
+        // setPosts(prevPosts => {
+        //     return [...prevPosts, post];
+        // });
     }
 
     return (<>
-        {isPosting && (<Modal onClose={onStopPosting}>
-                <NewPost onTextChange={handleTextChange} onAuthorChange={handleAuthorChange} onCancel={onStopPosting}/>
-            </Modal>)}
-
         <ul className={classes.posts}>
-            <Post author={enteredAuthor} text={enteredText}/>
-            <Post author="Marcus Lee" text="Just finished reading an amazing book."/>
-            <Post author="Sofia Martinez" text="Baking cookies all afternoon — house smells amazing!"/>
+            {!isLoading && posts.length > 0 && posts.map(post => <Post key={post.id} {...post}/>)}
         </ul>
+
+        {!isLoading && posts.length === 0 && (<p
+            style={{
+                textAlign: 'center', fontSize: '1.2rem', color: 'white', marginTop: '2rem'
+            }}>
+            🚀 No posts yet — be the pioneer!
+            <br/>
+            Share your thoughts and start the conversation.
+        </p>)}
+
+        {isLoading && <p style={{
+            textAlign: 'center', fontSize: '1.2rem', color: 'white', marginTop: '2rem'
+        }}>Loading...</p>}
     </>);
 }
